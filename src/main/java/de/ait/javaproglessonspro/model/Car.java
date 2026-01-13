@@ -1,91 +1,52 @@
 package de.ait.javaproglessonspro.model;
 
 
+import de.ait.javaproglessonspro.enums.CarStatus;
+import jakarta.persistence.*;
+import lombok.*;
+
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+
+@Entity
+@Table(name = "cars")
+@Getter
+@Setter
+@NoArgsConstructor
 public class Car {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    @Column(nullable = false)
+    @NotBlank(message = "Brand must not be empty")
     private String brand;
+
+    @Column(nullable = false)
+    @NotBlank(message = "Model must not be empty")
     private String model;
-    private int year;
+
+    @Column(name = "production_year")
+    @Min(value = 1900, message = "Year must be greater than 1900")
+    private int productionYear;
+
+    @Min(value = 0, message = "Mileage must be greater than 0")
     private int mileage;
+
+    @Min(value = 1, message = "Price must be greater than 0")
     private int price;
-    private String status;
 
-    public Car(Long id, String brand, String model, int year, int mileage, int price, String status) {
-        this.id = id;
+    @Enumerated(EnumType.STRING)
+    private CarStatus status;
+
+
+    public Car(String brand, String model, int productionYear, int mileage, int price, String status) {
         this.brand = brand;
         this.model = model;
-        this.year = year;
+        this.productionYear = productionYear;
         this.mileage = mileage;
         this.price = price;
-        this.status = status;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getBrand() {
-        return brand;
-    }
-
-    public void setBrand(String brand) {
-        this.brand = brand;
-    }
-
-    public String getModel() {
-        return model;
-    }
-
-    public void setModel(String model) {
-        this.model = model;
-    }
-
-    public int getYear() {
-        return year;
-    }
-
-    public void setYear(int year) {
-        this.year = year;
-    }
-
-    public int getMileage() {
-        return mileage;
-    }
-
-    public void setMileage(int mileage) {
-        this.mileage = mileage;
-    }
-
-    public int getPrice() {
-        return price;
-    }
-
-    public void setPrice(int price) {
-        this.price = price;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    @Override
-    public String toString() {
-        return "Car{" +
-                "id=" + id +
-                ", brand='" + brand + '\'' +
-                ", model='" + model + '\'' +
-                ", year=" + year +
-                ", mileage=" + mileage +
-                ", price=" + price +
-                ", status='" + status + '\'' +
-                '}';
+        this.status = CarStatus.valueOf(status);
     }
 }

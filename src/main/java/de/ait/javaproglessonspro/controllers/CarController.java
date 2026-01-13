@@ -2,48 +2,62 @@ package de.ait.javaproglessonspro.controllers;
 
 
 import de.ait.javaproglessonspro.model.Car;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import de.ait.javaproglessonspro.repository.CarRepository;
+import lombok.AllArgsConstructor;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/cars")
+@AllArgsConstructor
 public class CarController {
 
-    private List<Car> allCars = List.of(
-            new Car(1L, "BMW", "X5", 2000, 30000, 35000, "AVAILABLE"),
-            new Car(2L, "Audi", "A4", 2025, 2000, 25000, "SOLD")
-    );
+    private final CarRepository carRepository;
 
     @GetMapping
     public List<Car> getAllCars() {
-        return allCars;
+        return carRepository.findAll();
     }
 
     @GetMapping("/{id}")
     public Car getCarById(@PathVariable Long id) {
-        if (id == 1L) {
-            return new Car(1L, "BMW", "X5", 2000, 30000, 35000, "AVAILABLE");
-        } else if (id == 2L) {
-            return new Car(2L, "Audi", "A4", 2025, 2000, 25000, "SOLD");
-        }
-        return null;
+
+        /**return allCars.stream()
+         .filter(car -> car.getId().equals(id))
+         .findFirst()
+         .orElse(null);*/
+        return carRepository.findById(id).orElse(null);
     }
 
     @DeleteMapping("/{id}")
-    public String deleteCar(@PathVariable Long id) {
-        if (id == 1L) {
-            Car deletedCar = allCars.removeFirst();
-            return "deleted ID = 1";
-        } else if (id == 2L) {
-            allCars.removeLast();
-            return "deleted ID = 2";
-        } else {
-            return "Not found";
+    public void deleteCar(@PathVariable Long id) {
+        carRepository.deleteById(id);
+    }
+
+    @GetMapping("/brand/{brand}")
+    public List<Car> getCarByBrand(@PathVariable String brand) {
+        return carRepository.findByBrand(brand);
+    }
+
+
+    @PostMapping
+    public Long addCar(@RequestBody Car car) {
+        return carRepository.save(car).getId();
+    }
+
+    @PutMapping("/{id}")
+    public String updateCar(@PathVariable Long id, @RequestBody Car car) {
+        if (carRepository.existsById(id)) {
+            Car carToUpdate = carRepository.findById(id).orElse(null);
+            carToUpdate.setBrand(car.getBrand());
+            carToUpdate.setModel(car.getModel());
+            carToUpdate.setProductionYear(car.getProductionYear());
+            carToUpdate.setMileage(car.getMileage());
+            carToUpdate.setPrice(car.getPrice());
+            carToUpdate.setStatus(car.getStatus());
+            return "updated car with id = " + id;
         }
+        return "car with id = " + id + " not found";
     }
 }
