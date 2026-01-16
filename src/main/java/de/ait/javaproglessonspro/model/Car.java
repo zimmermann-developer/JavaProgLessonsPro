@@ -4,6 +4,7 @@ package de.ait.javaproglessonspro.model;
 import de.ait.javaproglessonspro.enums.CarStatus;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
@@ -16,7 +17,7 @@ import javax.validation.constraints.NotBlank;
 public class Car {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)

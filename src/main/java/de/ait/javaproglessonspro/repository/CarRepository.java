@@ -16,4 +16,6 @@ public interface CarRepository extends JpaRepository<Car, Long> {
 
     boolean existsById(@NonNull Long id);
 
+    List<Car> findByPriceBetween(int min, int max);
+
 }
