@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class InitData {
-    @Bean
+    /**@Bean
     CommandLineRunner initDatabase(CarRepository carRepository) {
         return args -> {
             if(carRepository.count() == 0){
@@ -17,5 +17,5 @@ public class InitData {
                 carRepository.save(new Car("Mercedes", "C-Class", 2020, 80000, 60000, "AVAILABLE"));
             }
         };
-    }
+    }*/
 }
