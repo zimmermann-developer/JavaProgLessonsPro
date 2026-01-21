@@ -74,18 +74,10 @@ public class CarController {
 
     @Operation(summary = "Add a new car")
     @PostMapping
-    public ResponseEntity<Long> addCar(@RequestBody Car car) {
-        if(car.getStatus() == null){
-            log.error("Car status is null");
-            return ResponseEntity.badRequest().build();
-        }
+    public ResponseEntity<Long> addCar(@RequestBody @Valid Car car) {
         Car savedCar = carRepository.save(car);
-        if (savedCar == null) {
-            log.error("Car could not be saved");
-            return ResponseEntity.badRequest().build();
-        }
         log.info("Car with id {} saved", savedCar.getId());
-        return new ResponseEntity(HttpStatusCode.valueOf(201));
+        return new ResponseEntity<>(HttpStatusCode.valueOf(201));
     }
 
     @Operation(summary = "Update one car by id")
@@ -141,9 +133,6 @@ public class CarController {
     )
     @GetMapping("/by-fuel")
     public ResponseEntity<List<Car>> getCarByFuelType(@RequestParam FuelType fuelType) {
-        if (!carRepository.existsByFuelType(fuelType)) {
-            return ResponseEntity.notFound().build();
-        }
         return ResponseEntity.ok(carRepository.findByFuelType(fuelType));
     }
 

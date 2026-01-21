@@ -4,14 +4,14 @@ package de.ait.javaproglessonspro.model;
 import de.ait.javaproglessonspro.enums.CarStatus;
 import de.ait.javaproglessonspro.enums.FuelType;
 import de.ait.javaproglessonspro.enums.Transmission;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "cars")
@@ -42,14 +42,17 @@ public class Car {
     @Min(value = 1, message = "Price must be greater than 0")
     private int price;
 
+    @NotNull(message = "Status must not be null")
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private CarStatus status;
 
+    @NotNull(message = "Fuel type must not be null")
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private FuelType fuelType;
 
+    @NotNull(message = "Transmission must not be null")
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Transmission transmission;
