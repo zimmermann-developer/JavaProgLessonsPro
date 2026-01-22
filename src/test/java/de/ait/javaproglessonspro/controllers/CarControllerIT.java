@@ -146,9 +146,44 @@ public class CarControllerIT {
         List<Car> cars = carRepository.findAll();
         assertTrue(cars.isEmpty());
 
-
     }
 
+    @Test
+    @DisplayName("POST /api/cars should return 400 when model is null")
+    void testCreateCarWithNullModel() throws Exception {
+        Car car = buildValidCar("Audi", "A6");
+        car.setModel(null);
+
+        String jsonBody = objectMapper.writeValueAsString(car);
+
+        mockMvc.perform(post("/api/cars")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonBody))
+                .andExpect(status().isBadRequest());
+
+        List<Car> cars = carRepository.findAll();
+        assertTrue(cars.isEmpty());
+    }
+
+    @Test
+    @DisplayName("POST /api/cars should not save car in H2, invalid JSON return 400")
+    void testCreateNewCarShouldReturn400TransmissionNotValid() throws Exception {
+        Car car = buildValidCar("Audi", "A6");
+        car.setTransmission(null);
+
+        String jsonBody = objectMapper.writeValueAsString(car);
+
+        mockMvc.perform(
+                        post("/api/cars")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(jsonBody))
+                .andExpect(status().isBadRequest());
+
+        List<Car> cars = carRepository.findAll();
+        assertTrue(cars.isEmpty());
+
+
+    }
 
 
 

@@ -4,6 +4,7 @@ package de.ait.javaproglessonspro.controllers;
 import de.ait.javaproglessonspro.enums.FuelType;
 import de.ait.javaproglessonspro.model.Car;
 import de.ait.javaproglessonspro.repository.CarRepository;
+import de.ait.javaproglessonspro.validators.CarValidator;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -74,7 +75,13 @@ public class CarController {
 
     @Operation(summary = "Add a new car")
     @PostMapping
-    public ResponseEntity<Long> addCar(@RequestBody @Valid Car car) {
+    public ResponseEntity<List<String>> addCar(@RequestBody  Car car) {
+        CarValidator carValidator = new CarValidator();
+        List<String> errors = carValidator.validateWithErrors(car);
+        if(!errors.isEmpty()) {
+            return ResponseEntity.badRequest().body(errors);
+        }
+
         Car savedCar = carRepository.save(car);
         log.info("Car with id {} saved", savedCar.getId());
         return new ResponseEntity<>(HttpStatusCode.valueOf(201));
@@ -154,5 +161,7 @@ public class CarController {
 
         return ResponseEntity.ok(cars);
     }
+
+
 
 }
