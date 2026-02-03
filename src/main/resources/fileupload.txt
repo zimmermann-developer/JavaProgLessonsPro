@@ -1,0 +1,3 @@
+multipart/form-data
+
+../../etc/passwd/file.bat
